@@ -12,7 +12,7 @@ void Email::validar_parte_local(string local){
         throw invalid_argument("Email Invalido! Parte Local Inadequada.");
     }
     // testa caracter final
-    if(local[local.size()-1] == '-' || local[local.size()]){
+    if(local[local.size()-1] == '-' || local[local.size()-1] == '.'){
         throw invalid_argument("Email Invalido! Parte Local Inadequada.");
     }
 
@@ -21,21 +21,37 @@ void Email::validar_parte_local(string local){
         if(!isalnum(local[i]) && local[i] != '-' && local[i] != '.'){
             throw invalid_argument("Email Invalido! Parte Local Inadequada.");
         }
+        if(local[i] == '.' || local[i] == '-'){
+            if(!isalnum(local[i+1])){
+                throw invalid_argument("Email Invalido! Parte Local Inadequada.");
+            }
+        }
     }
 }
-void Email::validar_dominio(string dom){
+void Email::validar_dominio(string dominio){
 
     // testa limite
-    if(dom.size() > LIMITE_dominio){
+    if(dominio.size() > LIMITE_dominio){
         throw invalid_argument("Email Invalido! Dominio Inadequado.");
     }
-    // testa caracter inicial
-    if(dom[0] == '-' || dom[dom.size()] == '-'){
+    // testa caracter
+    if(dominio[0] == '-' || dominio[0] == '.'){
         throw invalid_argument("Email Invalido! Dominio Inadequado.");
     }
-    for(int i = 0; dom[i] != '\0'; i++){
-        if(!isalnum(dom[i]) && dom[i] != '-'){
+    // testa ultimo caracter
+    if(dominio[dominio.size()-1] == '.' || dominio[dominio.size()-1] == '-'){
+        throw invalid_argument("Email Invalido! Dominio Inadequado.");
+    }
+    //testa o restantante
+    for(int i = 0; dominio[i] != '\0'; i++){
+        if(!isalnum(dominio[i]) && dominio[i] != '-' && dominio[i] != '.'){
             throw invalid_argument("Email Invalido! Dominio Inadequado.");
+        }
+        // cada parte deve comecar e terminar com letras ou numeros
+        if(dominio[i] == '.'){
+            if(!isalnum(dominio[i+1]) || !isalnum(dominio[i-1])){
+                throw invalid_argument("Email Invalido! Dominio Inadequado.");
+            }
         }
     }
 }
